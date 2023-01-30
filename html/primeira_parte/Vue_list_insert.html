@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>FrameWork Vue</title>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    </head> 
+    <body>
+         <h2>Terceiro Exemplo com Vue</h2>
+            <div id="app">
+               
+                    <h2>Listagem de Jogadores do CS</h2>   
+
+                    <li v-for="j in jogadores">
+                                                                        
+                        <big>Jogador:</big><small>{{j.nickname}}</small> - <big>Estrelas:</big><small>{{j.qtd_estrela}}</small> - <big>Senha:</big><small>{{j.senha}}</small>                        
+                                               
+                    </li>
+               
+                    <form id="formulario">                        
+                        <h2>Formulário para cadastrar novo jogador</h2>
+                        <ul>
+                            <div class="container">
+                                <label>Nickname:</label><input v-model="novo_jogador.nickname" class="form-control" placeholder="Me edite">
+                                <label>Estrelas:</label><input v-model="novo_jogador.qtd_estrela" class="form-control" type="number">
+                                <label>Senha:</label><input v-model="novo_jogador.senha" class="form-control" type="password" maxlength="4" placeholder="digite uma senha de 4 digitos">
+
+                            </div>                            
+                        </ul>
+                        <span class="input-group-btn">
+                            <button  @click="addJogador" class="btn btn-primary" type="button">Adicionar!</button>
+                        </span>
+                    </form>        
+
+            </div>       
+    </body>
+    <script type="text/javascript">
+
+        //1) explicar porque os dados inseridos são perdidos após 
+        // o recarregamento da página.
+    
+        //2) alteracoes: customizar os inputs para número e senha.
+        //Utilizando o atributo type.
+
+
+        //3) alterar a implementação da validação do formulário para
+        //impedir nickname menores e igual a 3 dígitos e maiores que 8.
+        //R: 
+        
+        //4) alterar a implementação da validação do formulário para
+        //permitir apenas senhas com 4 dígitos.
+
+
+        $(document).ready(function() {
+            var dados = { 
+                jogadores:  [ {nickname: 'joaozinho', qtd_estrela: 5, senha: '123'},    
+                              {nickname: 'ze', qtd_estrela: 12, senha: '456'},
+                              {nickname: 'bastião', qtd_estrela: 16, senha: '777'},
+                              {nickname: 'romario', qtd_estrela: 19, senha: '220'},
+                              {nickname: 'bebeto', qtd_estrela: 10, senha: '22'},
+                              {nickname: 'cannigia', qtd_estrela: 2, senha: '228'},
+                              {nickname: 'maradona', qtd_estrela: 1, senha: '228'}
+                            ], 
+                            
+                novo_jogador: {nickname: '', qtd_estrela: 0, senha: ''}
+            };
+        
+         alert('passou aqui');
+
+          new Vue({ 
+                el: '#app', 
+                data: dados,
+                methods: { 
+
+                    addJogador: function () { 
+                        var input_jogador = this.novo_jogador.nickname.trim(); 
+		                var input_qtd_estrela = this.novo_jogador.qtd_estrela; 
+                        var input_senha = this.novo_jogador.senha.trim();
+                        //validacao do formulario
+                        if (input_jogador.length > 3 && input_jogador.length < 9 &&
+                           input_qtd_estrela > 0 && 
+                           input_senha.length == 4) {
+                        
+                            this.jogadores.push({nickname: input_jogador, qtd_estrela: input_qtd_estrela, senha:input_senha})
+
+                        }else{
+
+                            alert("Preencha todo os campos !!!");
+                        }
+                    }
+
+                }
+            }); 
+        });
+
+    </script> 
+   
+ </html>

@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Vue - CRUD - Endereço - Jogador - Banco de dados</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>      
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
+        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    </head> 
+    <body> 
+       
+        <div class="container-fluid">
+            <h3>Projeto Vue+Axios+Express+Node</h3>        
+
+             <div class="col-xs-2">
+               <ul class="nav nav-pills nav-stacked">
+                 <li class="active"><a data-toggle="pill" href="#home">Autenticação</a></li>
+                 <li><a data-toggle="pill" href="#menu1">Endereço</a></li>
+                 <li><a data-toggle="pill" href="#menu2">Jogador</a></li>
+                 <li><a data-toggle="pill" href="#menu3">Modo</a></li>
+                 <li><a data-toggle="pill" href="#menu_reavaliacao_primeira_etapa">Arma</a></li>
+                 <li><a data-toggle="pill" href="#menu_reavaliacao_primeira_etapa_p2">Municão</a></li>
+                 <li><a data-toggle="pill" href="#menu4">Sair</a></li>
+               </ul>
+             </div>
+             <div class="col-xs-6">
+               <div class="tab-content" id="app">
+
+
+                <div id="menu_reavaliacao_primeira_etapa_p2" class="tab-pane fade" v-if="form_autenticacao.datacadastro">
+                    <h2>Listagem de Armas</h2>   
+
+                    <table id="tblListagemMunicoes" class="table table-striped" >
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Data de Criação</th>
+                            <th scope="col">Calibre</th>
+                            <th scope="col">Remover</th>
+                        </tr>                     
+                        <tbody>
+                            <tr v-for="(a, indice) in municoes">                                                
+                                    <td>{{a.codigo}}</td>
+                                    <td>{{a.nome}}</td>
+                                    <td>{{a.valor}}</td>
+                                    <td>{{a.datacriacao}}</td>
+                                    <td>{{a.calibre}}</td>                                 
+                                    <td><button v-on:click="remMunicao(indice, a.codigo)" class="btn" type="button">Remover</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                 </div>
+
+
+                <div id="menu_reavaliacao_primeira_etapa" class="tab-pane fade" v-if="form_autenticacao.datacadastro">
+                    <h2>Listagem de Armas</h2>   
+
+                    <table id="tblListagemArmas" class="table table-striped" >
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Data de Criação</th>
+                            <th scope="col">Nível do Dano</th>
+                            <th scope="col">Velocidade da Recarga</th>
+                            <th scope="col">Quantidade Max. Compra</th>
+                            <th scope="col">Remover</th>
+                        </tr>                     
+                        <tbody>
+                            <tr v-for="(a, indice) in armas">                                                
+                                    <td>{{a.codigo}}</td>
+                                    <td>{{a.nome}}</td>
+                                    <td>{{a.valor}}</td>
+                                    <td>{{a.datacriacao}}</td>
+                                    <td>{{a.niveldano}}</td>
+                                    <td>{{a.velocidade_recarga}}</td>
+                                    <td>{{a.quant_max_compra}}</td>                                    
+                                    <td><button v-on:click="remArma(indice, a.codigo)" class="btn" type="button">Remover</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                 </div>
+                <div id="home" class="tab-pane fade in active" v-if="!form_autenticacao.datacadastro">
+                   <h3>Autenticacação</h3>
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="inputANickname">Nickname:</label>
+                            <input type="text" v-model="form_autenticacao.nickname" class="form-control" id="inputANickname">
+                         </div>
+                        
+                        <div class="form-outline mb-4">
+                            <label class="form-label"for="inputASenha">Senha:</label>
+                            <input type="password" v-model="form_autenticacao.senha" class="form-control" id="inputASenha">
+                        </div>
+                        
+                        <button @click="autenticarJogador" class="btn btn-primary btn-block mb-4" type="button">Autenticar</button>
+                                                  
+                </div>
+                <div id="menu4" class="tab-pane fade" v-if="form_autenticacao.datacadastro">
+
+                    <button @click="desautenticarJogador" class="btn btn-primary" type="button">Sair</button>
+                </div>
+
+                <div id="menu3" class="tab-pane fade" v-if="form_autenticacao.datacadastro">
+                    <h2>Listagem de Modos</h2>   
+
+                    <table class="table table-striped" >
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Data de Criação</th>
+                            <th scope="col">Quantidade de Boots</th>
+                            <th scope="col">Quantidade de Rounds</th>
+                            <th scope="col">Alterar</th>
+                            <th scope="col">Remover</th>
+                        </tr>                     
+                        <tbody>
+                            <tr v-for="(m, indice) in modos">                                                
+                                    <td>{{m.codigo}}</td>
+                                    <td>{{m.nome}}</td>
+                                    <td>{{m.datacriacao}}</td>
+                                    <td>{{m.quantboots}}</td>
+                                    <td>{{m.quantrounds}}</td>
+                                    <td><button v-on:click="editModo(indice)" class="btn" type="button">Alterar</button></td>
+                                    <td><button v-on:click="remModo(indice, m.codigo)" class="btn" type="button">Remover</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <form id="formularioModo">     
+                        <h3>Formulário para cadastrar e alterar Modo</h3>                   
+                        <div>
+                          <div class="form-group">
+                            <label for="inputId">Código:</label>
+                            <input type="text" v-model="novo_modo.codigo" class="form-control" id="inputId" disabled>
+                          </div>
+                          <div class="form-group">
+                              <label for="inputNome">Nome:</label>
+                              <input type="text" v-model="novo_modo.nome" class="form-control" id="inputNome">
+                          </div>
+                          <div class="form-group">
+                              <label for="inputComplemento">Quantidade de Boots:</label>
+                              <input type="number" v-model="novo_modo.quantboots" class="form-control" id="inputQuantboots">
+                          </div>
+
+                          <div class="form-group">
+                            <label for="inputComplemento">Quantidade de Rounds:</label>
+                            <input type="number" v-model="novo_modo.quantrounds" class="form-control" id="inputQuantrounds">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputComplemento">Data de Criação:</label>
+                            <input type="date" v-model="novo_modo.datacriacao" class="form-control" id="inputDatacriacao" disabled>
+                        </div>
+                          
+                          <button @click="addModo" class="btn btn-primary" type="button">Salvar</button>
+                          <button @click="cleanFormularioModo" class="btn btn-primary" type="button">Limpar</button>                         
+                        </div>                                                                            
+                    </form> 
+
+                 </div>
+                <div id="menu1" class="tab-pane fade" v-if="form_autenticacao.datacadastro">
+                  
+                    <h2>Listagem de Endereços</h2>   
+
+                    <table class="table table-striped" >
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">CEP</th>
+                            <th scope="col">Jogador</th>
+                            <th scope="col">Alterar</th>
+                            <th scope="col">Remover</th>
+                        </tr>                     
+                        <tbody>
+                            <tr v-for="(e, indice) in enderecos">                                                
+                                    <td>{{e.codigo}}</td>
+                                    <td>{{e.cep}}</td>
+                                    <td>{{e.jogador.nickname}}</td>
+                                    <td><button v-on:click="editEndereco(indice, e.codigo)" class="btn" type="button">Alterar</button></td>
+                                    <td><button v-on:click="remEndereco(indice, e.codigo)" class="btn" type="button">Remover</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+  
+                    <form id="formularioEndereco">     
+                        <h3>Formulário para cadastrar Endereço</h3>                   
+                        <div>
+                          <div class="form-group">
+                            <label for="inputCodigo">#:</label>
+                            <input type="text" v-model="novo_endereco.codigo" class="form-control" id="inputCodigo" disabled>
+                          </div>
+                          <div class="form-group">
+                              <label for="inputCEP">CEP:</label>
+                              <input type="text" v-model="novo_endereco.cep" class="form-control" id="inputcep">
+                          </div>
+                          <div class="form-group">
+                              <label for="inputComplemento">Complemento:</label>
+                              <input type="text" v-model="novo_endereco.complemento" class="form-control" id="inputComplemento">
+                          </div>
+                          
+                          <div class="form-group">
+                            <label for="selectJogador"><a href="#menu2">Jogador:</a></label>
+                            <select v-model="novo_endereco.jogador" class="form-control" id="selectJogador">
+                                <option disabled value="">Escolha um item</option>
+                                <option v-for="j in jogadores" v-bind:value="{nickname: j.nickname}">
+                                    {{ j.nickname}}
+                                </option>                            
+                            </select>
+                            </div> 
+                          
+                            
+                          <button @click="addEndereco" class="btn btn-primary" type="button">Salvar</button>
+                          <button @click="cleanFormularioEndereco" class="btn btn-primary" type="button">Limpar</button>                         
+                        </div>                                                                            
+                    </form> 
+
+                </div>
+                <div id="menu2" class="tab-pane fade" v-if="form_autenticacao.datacadastro">
+
+                    <h2>Listagem de Jogadores do CS</h2>   
+
+                    <table class="table table-striped" >
+                        <tr>
+                            <th scope="col">NickName</th>
+                            <th scope="col">Data de Cadastro</th>
+                            <th scope="col">Quantidade de Pontos</th>
+                            <th scope="col">Endereço</th>   
+                            <th scope="col">Situação</th> 
+                            <th scope="col">Alterar</th>
+                            <th scope="col">Remover</th>
+                        </tr>                     
+                        <tbody>
+                            <tr v-for="(j, indice) in jogadores">                                                
+                                    <td>{{j.nickname}}</td>
+                                    <td>{{j.datacadastro}}</td>
+                                    <td>{{j.quantpontos}}</td>
+                                    <td>{{j.endereco.cep}}</td>
+                                    <td v-if="j.situacao == 'A'"><input type="checkbox" checked disabled></td>
+                                    <td v-if="j.situacao == 'I'"><input type="checkbox" disabled></td>                     
+                                    <td><button v-on:click="editJogador(indice)" class="btn" type="button">Alterar</button></td>
+                                    <td><button v-on:click="remJogador(indice)" class="btn" type="button">Remover</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <form id="formulario">                        
+                      <h3>Formulário para cadastrar Jogador</h3>
+                          <div class="form-group">
+                              <label for="inputNickname">Nickname:</label>
+                              <input type="text" v-model="novo_jogador.nickname" class="form-control" id="inputNickname">
+                          </div>
+                          <div class="form-group">
+                            <label for="inputSenha">Senha:</label>
+                            <input type="password" v-model="novo_jogador.senha" class="form-control" id="inputSenha">
+                        </div>
+                        <div class="form-group">
+                              <label for="inputDtCad">D. Cadastro:</label>
+                              <input type="text" v-model="novo_jogador.datacadastro" class="form-control" id="inputDtCad" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDtLast">D. Último Acesso:</label>
+                            <input type="text" v-model="novo_jogador.data_ultimo_login" class="form-control" id="inputDtLast" disabled>
+                        </div>
+                        <div class="form-group">
+                              <label for="inputQtdPontos">Quantidade de Pontos:</label>
+                              <input type="number" v-model="novo_jogador.quantpontos" class="form-control" id="inputQtdPontos">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputQtdDin">Quantidade de dinheiro:</label>
+                            <input type="number" v-model="novo_jogador.quantdinheiro" class="form-control" id="inputQtdDin">
+                        </div>
+                        <div class="form-group">
+                            <label for="checkSituacao">Situação:</label>
+                            <input type="checkbox" v-model="novo_jogador.situacao" id="checkSituacao">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputCep">Cep:</label>
+                            <input type="text" v-model="novo_jogador.endereco.cep" class="form-control" id="inputCep">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputCom">Complemento:</label>
+                            <input type="text" v-model="novo_jogador.endereco.complemento" class="form-control" id="inputCom">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="selectPatente">Patentes:</label>
+                            <select v-model="novo_jogador.patentes" class="form-control" id="selectPatente" multiple>                                
+                                <option v-for="p in patentes" v-bind:value="p">
+                                    {{ p.nome }}
+                                  </option>
+                            </select>
+                            
+                        </div>
+                        
+                        <button @click="addJogador" class="btn btn-primary" type="button">Salvar</button>
+                        <button @click="cleanFormularioJogador" class="btn btn-primary" type="button">Limpar</button>
+                                                                                                      
+                    </form>  
+
+                </div>
+
+               </div>
+             </div>
+           </div>
+         </div>
+
+    </body>
+    <script type="text/javascript">
+
+    $(document).ready(function() {
+
+      var armas = [];
+
+      var municoes = [];
+
+      var modos = [];
+
+      var jogadores = [];
+
+      var enderecos = [];
+
+      var dados = {"jogadores": jogadores, 
+                  "form_autenticacao" : {
+                                nickname: '',
+                                senha: '',
+                                datacadastro: '', 
+                  },    
+                  "novo_jogador" : {indice: '', 
+                                    nickname: '', 
+                                    senha: '',
+                                    quantpontos: 0, 
+                                    quantdinheiro: 0,
+                                    datacadastro: '', 
+                                    data_ultimo_login: '', 
+                                    situacao: '',  
+                                    endereco: {codigo: 0, cep: '', complemento: ''},
+                                    patentes: []},
+                  "patentes" : [],                       
+                  "enderecos": enderecos,
+                  "novo_endereco" : {indice: '', codigo: '', cep: '', complemento: '', jogador : {}},
+                  "modos" : modos,
+                  "armas" : armas,
+                  "municoes" : municoes,
+                  "novo_modo" : { indice: '',  
+                                  codigo: '', 
+                                  nome : '', 
+                                  datacriacao : '',
+                                  quantboots : '',
+                                  quantrounds : '' }
+                };
+
+      Vue.filter('formataData', function (value) {                
+                //yyyy-mm-dd
+                var data = new Date(value);
+                data.setDate(data.getDate()+1); //incrementa a data em um dia para mostrar corretamente (pode nao ser necessário)              
+                dia  = (data.getDate()).toString().padStart(2, '0'),
+                mes  = (data.getMonth()+1).toString().padStart(2, '0'), //+1 pois no getMonth Janeiro começa com zero.                
+                ano  = data.getFullYear();                
+                return dia+"/"+mes+"/"+ano;                
+        })  
+        
+      Vue.prototype.$http = axios;
+
+      new Vue({ 
+                el: '#app', 
+                data: dados,
+                methods: { 
+                    autenticarJogador: function (){
+                        var jogador = jQuery.extend({}, this.form_autenticacao);//clona o this.novo_jogador e armazena na variavel jogador. dessa forma alteracoes em this.novo_jogador nao irao refletir em jogador.
+                        
+                        if (jogador.nickname.trim().length > 0 && jogador.senha.trim().length > 0) {
+
+
+                            this.$http.post('http://localhost:4000/loginjogador', jogador
+                                    )
+                                .then(response => { 	
+                                      
+                                        if(response.status == 201){
+
+                                            alert("Jogador " + response.data.nickname + " autenticado com sucesso !!!");
+
+                                            this.form_autenticacao.datacadastro =  response.data.datacadastro;
+
+                                           
+                                        }else if (response.status == 204){
+
+                                            alert("Não localizou  nickname e/ou senha !!!");
+                                        }else{
+                                            alert("Erro ao autenticar !!");
+                                        }
+                                    })
+                                .catch(error => {                                     
+                                    alert('Erro no loginjogador: '+error.response.data);
+                                });
+
+
+
+                        }else{
+                            alert("Informe Nickname e senha para autenticar !");
+                        }
+                        
+
+                    },
+                    desautenticarJogador: function () {
+
+                        this.form_autenticacao.nickname = ''; 
+                        this.form_autenticacao.senha = '';
+                        this.form_autenticacao.datacadastro =  '';
+
+                    },
+                    addModo: function () {
+
+                        var modo = jQuery.extend({}, this.novo_modo);//clona o this.novo_endereco e armazena na variavel jogador. dessa forma alteracoes em this.novo_jogador nao irao refletir em jogador.
+                                               
+                        if (modo.nome.length > 0) {
+                            
+                            //documentação sobre o parseInt
+                            //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/parseInt
+                            if(isNaN(parseInt(modo.indice))){
+
+                                this.$http.post('http://localhost:4000/insertmodo', modo
+                                    )
+                                .then(response => { 	
+                                        
+                                        this.modos.push(response.data);										
+                                        alert('Inseriu o Modo '+response.data.codigo);
+                                    })
+                                .catch(error => {                                     
+                                    alert('Erro ao inserir Modo: '+error.response.data);
+                                });
+
+                            }else{
+
+                                this.$http.post('http://localhost:4000/updatemodo', modo
+                                    )
+                                .then(response => { 	
+                                                                                                                        
+                                        Vue.set(this.modos, modo.indice, response.data);
+
+                                        alert('Alterou o Modo '+response.data.codigo);
+                                    })
+                                .catch(error => {                                     
+                                    alert('Erro ao alterar Modo: '+error);
+                                });	
+
+                            }
+                                                  
+                            this.cleanFormularioModo();
+                       
+                    }else{
+
+                        alert("Preencha formulario de Modo !!!");
+                    }
+
+
+                    },
+                    addEndereco: function () {                        
+
+                        var endereco = jQuery.extend({}, this.novo_endereco);//clona o this.novo_endereco e armazena na variavel jogador. dessa forma alteracoes em this.novo_jogador nao irao refletir em jogador.
+                                               
+                        if (endereco.cep.length == 8) {
+                            
+                            //documentação sobre o parseInt
+                            //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/parseInt
+                            if(isNaN(parseInt(endereco.indice))){
+
+                                this.$http.post('http://localhost:4000/insertendereco', endereco
+                                   )
+								.then(response => { 	
+										
+										this.enderecos.push(response.data);										
+                                        alert('Inseriu o Endereço '+response.data.codigo);
+									})
+								.catch(error => {                                     
+									alert('Erro ao inserir Endereço: '+error.response.data);
+								});
+
+                            }else{
+
+                                this.$http.post('http://localhost:4000/updateendereco', endereco
+                                   )
+								.then(response => { 	
+										                                                                                
+                                        Vue.set(this.enderecos, endereco.indice, response.data);
+
+                                        alert('Alterou o Endereço '+response.data.codigo);
+									})
+								.catch(error => {                                     
+									alert('Erro ao alterar Endereço: '+error);
+								});	
+
+
+                               
+                                alert('Endereço alterado !');
+                            }
+                            //localStorage.setItem("enderecos" , JSON.stringify(this.enderecos));
+                            
+                            this.cleanFormularioEndereco();
+
+                        }else{
+
+                            alert("Preencha CEP !!!");
+                        }
+                    },
+
+                    editEndereco: function (param_index) {
+
+                        this.novo_endereco.indice = param_index;
+                        this.novo_endereco.codigo = this.enderecos[param_index].codigo;
+                        this.novo_endereco.cep = this.enderecos[param_index].cep; 
+                        this.novo_endereco.complemento = this.enderecos[param_index].complemento;       
+                        this.novo_endereco.jogador = this.enderecos[param_index].jogador;
+                    },                    
+
+                    remEndereco: function(param_index){
+
+                        //documentacao sobre o splice
+                        //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+                        //remove 1 elemento do índice definido pela variavel param_index
+                        var r = confirm("Deseja realmente remover o Endereço?");
+                        if(r){                            
+                            
+                            this.$http.get('http://localhost:4000/deleteendereco/' + this.enderecos[param_index].codigo)
+
+                                .then(response => {
+
+                                    //documentacao sobre o splice
+                                    //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+                                    //remove 1 elemento do índice definido pela variavel param_index
+                                    this.enderecos.splice(param_index, 1);
+
+                                    alert('Removeu com sucesso o Endereço ' + response.data.codigo);
+
+                                    })
+                                .catch(error => {
+                                        // error callback                                        
+                                        alert('Erro ao remover: ' + error);
+                                        console.log(error);
+                                });	
+
+                        }
+
+                    },
+                    cleanFormularioModo: function () {
+                        this.novo_modo.indice = '';
+                        this.novo_modo.codigo = '';
+                        this.novo_modo.nome = '';
+                        this.novo_modo.quantboots = '';
+                        this.novo_modo.quantrounds = '';
+                        this.novo_modo.datacriacao = '';
+                    },
+                    cleanFormularioEndereco: function() {
+
+                        this.novo_endereco.indice = '';
+                        this.novo_endereco.codigo = '';
+                        this.novo_endereco.cep = ''; 
+                        this.novo_endereco.complemento = '';
+                        this.novo_endereco.jogador = '';
+                    },
+
+                    addJogador: function () {
+                        
+                        var jogador = jQuery.extend({}, this.novo_jogador);//clona o this.novo_jogador e armazena na variavel jogador. dessa forma alteracoes em this.novo_jogador nao irao refletir em jogador.
+                        var endereco = jQuery.extend({}, this.novo_jogador.endereco);//clona o this.novo_jogador.endereco                        
+                        jogador.endereco = endereco;                                                
+
+                        if (jogador.nickname.trim().length > 0 && jogador.senha.trim().length > 0 && 
+                            jogador.quantpontos > -1 && jogador.quantdinheiro > -1 && 
+                            jogador.endereco.cep.length > 0) {
+                            
+                            //documentação sobre o parseInt
+                            //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/parseInt
+                            if(isNaN(parseInt(jogador.indice))){
+                                                         
+                                this.$http.post('http://localhost:4000/insertjogador', jogador
+                                   )
+								.then(response => { 	
+										
+										this.jogadores.push(response.data);										
+                                        alert('Inseriu o jogador '+response.data.nickname);
+									})
+								.catch(error => { 
+                                    console.log(error)
+									alert('Erro ao inserir jogador: '+error.response.data);
+								});	
+
+                            }else{
+
+                                this.$http.post('http://localhost:4000/updatejogador', jogador
+                                   )
+								.then(response => { 	
+										                                        
+                                        //this.jogadores[jogador.indice]  = response.data;	                                        
+                                        Vue.set(this.jogadores, jogador.indice, response.data);//altera um elemento do vetor this.jogadores
+
+                                        alert('Alterou o jogador '+response.data.nickname);
+									})
+								.catch(error => { 
+                                    console.log(error)
+									alert('Erro ao alterar jogador: '+error);
+								});	
+
+                            }
+
+                            this.cleanFormularioJogador();
+
+                        }else{
+
+                            alert("Preencha o formulário !!!");
+                        }
+                    },
+
+                    editJogador: function (param_index) {
+
+                        this.novo_jogador.indice = param_index;
+                        this.novo_jogador.nickname = this.jogadores[param_index].nickname; 
+                        this.novo_jogador.senha = this.jogadores[param_index].senha;
+                        this.novo_jogador.datacadastro = this.jogadores[param_index].datacadastro;
+                        this.novo_jogador.data_ultimo_login = this.jogadores[param_index].data_ultimo_login;
+                        this.novo_jogador.quantpontos = this.jogadores[param_index].quantpontos;
+                        this.novo_jogador.quantdinheiro = this.jogadores[param_index].quantdinheiro;
+                        this.novo_jogador.situacao = this.jogadores[param_index].situacao == "A" ? true : false;
+                        this.novo_jogador.endereco = this.jogadores[param_index].endereco;                        
+                        this.novo_jogador.patentes = this.jogadores[param_index].patentes;                        
+                        
+                    },
+
+                    remJogador: function(param_index){
+
+                        //documentacao sobre o splice
+                        //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+                        //remove 1 elemento do índice definido pela variavel param_index
+                        var r = confirm("Deseja realmente remover?");
+                        if(r){                            
+                            
+                            this.$http.get('http://localhost:4000/deletejogador/' + this.jogadores[param_index].nickname)
+
+                                .then(response => {
+
+                                    //documentacao sobre o splice
+                                    //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+                                    //remove 1 elemento do índice definido pela variavel param_index
+                                    this.jogadores.splice(param_index, 1);
+
+                                    alert('Removeu com sucesso o jogador ' + response.data.nickname);
+
+                                    })
+                                .catch(error => {
+                                        // error callback                                        
+                                        alert('Erro ao remover: ' + error);
+                                        console.log(error);
+                                });	
+
+                        }
+
+                    },
+
+                    cleanFormularioJogador: function() {
+
+                      this.novo_jogador.indice = '';
+                      this.novo_jogador.nickname = ''; 
+                      this.novo_jogador.datacadastro = '';
+                      this.novo_jogador.quantdinheiro = 0;
+                      this.novo_jogador.quantpontos = 0;
+                      this.novo_jogador.senha = '';
+                      this.novo_jogador.situacao = false;
+                      this.novo_jogador.endereco = '';
+                      this.novo_jogador.data_ultimo_login = '';
+                    },
+
+                    editModo: function(param_index) {
+
+                        this.novo_modo.indice = param_index;
+                        this.novo_modo.codigo = this.modos[param_index].codigo;
+                        this.novo_modo.nome = this.modos[param_index].nome;
+                        this.novo_modo.quantboots = this.modos[param_index].quantboots;
+                        this.novo_modo.quantrounds = this.modos[param_index].quantrounds;
+                        this.novo_modo.datacriacao = this.modos[param_index].datacriacao;
+
+                    },
+
+                    remModo: function(param_index, param_codigo){
+                            var decisao = confirm('Deseja realmente remover o Modo ' + 
+                                                               param_codigo + ' ?');
+                            if(decisao){
+
+                                    this.$http.get('http://localhost:4000/deletemodo/' + this.modos[param_index].codigo)
+
+                                        .then(response => {
+
+                                            //documentacao sobre o splice
+                                            //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+                                            //remove 1 elemento do índice definido pela variavel param_index
+                                            this.modos.splice(param_index, 1);
+
+                                            alert('Removeu com sucesso o Modo ' + response.data.codigo);
+
+                                            })
+                                        .catch(error => {
+                                                // error callback                                        
+                                                alert('Erro ao remover o modo '+ param_codigo +': ' + error);
+                                                console.log(error);
+                                        });	
+
+                            }else{
+                                alert('Modo não removido !!!');
+                            }
+
+                    },
+                    remArma : function(param_index, param_codigo){
+
+
+
+                    },
+                    remMunicao : function(param_index, param_codigo){
+
+
+
+                    }
+                },
+                created: function(){
+
+                    
+                
+                    this.$http.get('http://localhost:4000/listjogador')                                        
+                        .then(response => {
+
+                            for(let j of response.data){
+
+                                this.jogadores.push({nickname: j.nickname, 
+                                                    senha:j.senha,
+                                                    quantpontos: j.quantpontos,
+                                                    quantdinheiro: j.quantdinheiro,
+                                                    datacadastro: j.datacadastro, 
+                                                    data_ultimo_login: j.data_ultimo_login,                                                  
+                                                    situacao: j.situacao,
+                                                    endereco:{codigo: j.codigo, 
+                                                              cep: j.cep, 
+                                                              complemento: j.complemento},
+                                                    patentes: j.patentes
+                                                   }
+                                                );
+
+                            }
+                        
+                        }).catch(response => {
+                            // error callback
+                           // alert('Não conectou no serviço: listjogador');
+                            console.log(response);
+                        });
+
+                    this.$http.get('http://localhost:4000/listendereco')                                        
+                        .then(response => {
+
+                            for(let e of response.data){
+
+                                this.enderecos.push({"codigo" : e.codigo,
+                                    "complemento" : e.complemento,
+                                    "cep" : e.cep,
+                                    "jogador" : {"nickname": e.nickname}});
+
+                            }
+                        }).catch(response => {
+                            // error callback
+                            // alert('Não conectou no serviço: listendereco');
+                            console.log(response);
+                        });
+
+                    this.$http.get('http://localhost:4000/listmodo')                                        
+                        .then(response => {
+
+                            for(let m of response.data){
+
+                                this.modos.push(m);
+
+                            }
+                        }).catch(response => {
+                            // error callback
+                            alert('Não conectou no serviço: listmodo');
+                            console.log(response);
+                        });
+
+                    this.$http.get('http://localhost:4000/listpatente')                                        
+                        .then(response => {                                                        
+
+                            for(let p of response.data){
+
+                                this.patentes.push(p);
+
+                            }
+                            
+                        }).catch(response => {
+                            // error callback
+                            alert('Não conectou no serviço: listpatente');
+                            console.log(response);
+                        });                        
+                
+                }
+          }); 
+
+    });
+
+
+
+    </script>
+</html>

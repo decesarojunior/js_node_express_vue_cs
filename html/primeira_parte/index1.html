@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>FrameWork Vue</title>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>    
+    </head> 
+    <body>
+         <h2>Primeiro Exemplo com Vue</h2>
+         
+            <div id="app">
+                <form id="formulario1">
+                    <h2>Listagem de Jogadores</h2>
+                    <ul>
+                        <li><label>{{jogadores[0].nickname}}</label></li>
+                        <li><label>{{jogadores[1].qtd_estrela}}</label></li>
+                        <li><label>{{jogadores[2].senha}}</label></li>
+                    </ul>  
+                    
+                    
+                    <ul id="example-1">
+                        <li v-for="j in jogadores" :key="j.nickname">
+                          {{ j.nickname }} {{ j.senha }} {{ j.qtd_estrela }}
+                        </li>
+                    </ul>
+
+
+
+                    <ul id="example-2">
+                        <li v-for="j in jogadores" :key="j.nickname">
+
+                            <p v-if="j.qtd_estrela > 10">
+                                {{ j.nickname }} {{ j.senha }} {{ j.qtd_estrela }}
+                            </p>
+                            <p v-else>jogador não tem 10 estrelas ...</p>
+
+                        </li>
+                    </ul>
+
+
+                </form>                
+            </div>       
+    </body>
+
+    <script type="text/javascript">
+   
+        $(document).ready(function() {
+
+            //alert('Chegou aqui !! ');
+        
+            var dados = { 
+                jogadores:  [ {nickname: 'joaozinho', qtd_estrela: 5, senha: '123'},    
+                              {nickname: 'ze', qtd_estrela: 12, senha: '456'},
+                              {nickname: 'bastião', qtd_estrela: 16, senha: '777'},
+                              {nickname: 'dede', qtd_estrela: 16, senha: '777'}
+                            ], 
+                patentes:   [ { codigo: '1', descricao: 'Ouro'},    
+                              { codigo: '2',   descricao: 'Prata'},
+                              { codigo: '3',   descricao: 'Bronze'}
+                            ]                
+            };
+        
+            new Vue({ 
+                el: '#app', 
+                data: dados,
+                methods: { 
+
+                }
+            }); 
+    
+        });
+
+    </script> 
+   
+ </html>
