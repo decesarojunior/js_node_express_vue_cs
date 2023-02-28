@@ -38,6 +38,7 @@
                         </li>
                     </ul>
 
+                    <h2>Listagem de Partidas</h2>
 
                 </form>                
             </div>       
@@ -56,9 +57,18 @@
                               {nickname: 'dede', qtd_estrela: 16, senha: '777'}
                             ], 
                 patentes:   [ { codigo: '1', descricao: 'Ouro'},    
-                              { codigo: '2',   descricao: 'Prata'},
-                              { codigo: '3',   descricao: 'Bronze'}
-                            ]                
+                              { codigo: '2', descricao: 'Prata'},
+                              { codigo: '3', descricao: 'Bronze'}
+                            ],
+                partidas:   [{codigo: 1, data: '28/02/2023', 
+                                           jogador: {nickname: 'joaozinho', 
+                                                     qtd_estrela: 5, 
+                                                     senha: '123'}},
+                             {codigo: 2, data: '10/02/2023', 
+                                           jogador: {nickname: 'bastião', 
+                                                     qtd_estrela: 0, 
+                                                     senha: '456'}}                    
+                            ]                         
             };
         
             new Vue({ 
