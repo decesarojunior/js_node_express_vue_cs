@@ -41,8 +41,20 @@
                     <h2>Listagem de Partidas</h2>
                         <li v-for="p in partidas" :key="p.codigo">
 
-                            
+                            {{p.codigo}} - Jogador: {{p.jogador.nickname}}
                         </li>
+
+                        <table border="1">
+                            <tr><td>Codigo</td>
+                                <td>Data</td>
+                            </tr>
+                            <tr v-for="p in partidas" :key="p.codigo">
+
+                               <td> {{p.codigo}} </td>
+                               <td></td>
+                            </tr>
+
+                        </table>
 
                 </form>                
             </div>       
