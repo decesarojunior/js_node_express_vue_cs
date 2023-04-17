@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Vue - Formulário com Máscaras</title>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    </head> 
+    <body>
+        <div id="app" class="container">               
+            <h2>Listagem de Jogadores do CS</h2>   
+            <table class="table table-striped" >
+                <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Data de Cadastro</th>
+                    <th scope="col">Modo</th>
+                    <th scope="col">Situação</th>                            
+                    <th scope="col">Alterar</th>
+                    <th scope="col">Remover</th>
+                </tr>
+                <tbody>
+                    <tr v-for="(m, indice) in mapas">                                                
+                            <td>{{indice}}</td>
+                            <td>{{m.nome}}</td>
+                            <td>{{m.data_cadastro}}</td>
+                            <td>{{m.modo.nome}}</td>
+                            <td v-if="m.situacao"><input type="checkbox" checked disabled></td>
+                            <td v-if="!m.situacao"><input type="checkbox" disabled></td>
+                            <td><button v-on:click="editMapa(indice)" class="btn" type="button">Alterar</button></td>
+                            <td><button v-on:click="remMapa(indice)" class="btn" type="button">Remover</button></td>
+                    </tr>
+                </tbody>
+
+
+            </table>
+
+        </div>   
+
+    </body>  
+    <script type="text/javascript">
+        $(document).ready(function() {            
+
+            var dados = {
+                mapas: [{codigo: 1 , nome: 'lol', data_cadastro: '2020-09-01', situacao: true, modo:{codigo: 1, nome: 'Bronze', data_descricao:'', quantidadede_boots:0, quantidade_rounds:0} }],
+                modos: [],
+                form_mapa : {}
+            }
+
+            new Vue({ 
+                el: '#app', 
+                data: dados,
+                methods: {
+
+                    editMapa: function(param_index){
+
+                    },
+                    remMapa: function(param_index){
+
+                    }
+                }
+            });
+            
+            
+        });
+
+
+    </script>
+
+
+</html>

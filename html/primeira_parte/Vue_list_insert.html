@@ -20,14 +20,14 @@
                
                     <form id="formulario">                        
                         <h2>Formulário para cadastrar novo jogador</h2>
-                        <ul>
-                            <div class="container">
-                                <label>Nickname:</label><input v-model="novo_jogador.nickname" class="form-control" placeholder="Me edite">
-                                <label>Estrelas:</label><input v-model="novo_jogador.qtd_estrela" class="form-control" type="number">
-                                <label>Senha:</label><input v-model="novo_jogador.senha" class="form-control" type="password" maxlength="4" placeholder="digite uma senha de 4 digitos">
+                        
+                        <div class="container">
+                            <label>Nickname:</label><input v-model="novo_jogador.nickname" class="form-control" placeholder="Me edite">
+                            <label>Estrelas:</label><input v-model="novo_jogador.qtd_estrela" class="form-control" type="number">
+                            <label>Senha:</label><input v-model="novo_jogador.senha" class="form-control" type="password" maxlength="4" placeholder="digite uma senha de 4 digitos">
 
-                            </div>                            
-                        </ul>
+                        </div>                            
+                    
                         <span class="input-group-btn">
                             <button  @click="addJogador" class="btn btn-primary" type="button">Adicionar!</button>
                         </span>
@@ -63,10 +63,10 @@
                               {nickname: 'maradona', qtd_estrela: 1, senha: '228'}
                             ], 
                             
-                novo_jogador: {nickname: '', qtd_estrela: 0, senha: ''}
+                novo_jogador: {nickname: '', qtd_pontos: '', qtd_estrela: 0, senha: ''}
             };
         
-         alert('passou aqui');
+         //alert('passou aqui');
 
           new Vue({ 
                 el: '#app', 
@@ -82,7 +82,10 @@
                            input_qtd_estrela > 0 && 
                            input_senha.length == 4) {
                         
-                            this.jogadores.push({nickname: input_jogador, qtd_estrela: input_qtd_estrela, senha:input_senha})
+                            this.jogadores.push({
+                                                 qtd_estrela: input_qtd_estrela, 
+                                                 senha:input_senha,
+                                                 nickname: input_jogador})
 
                         }else{
 

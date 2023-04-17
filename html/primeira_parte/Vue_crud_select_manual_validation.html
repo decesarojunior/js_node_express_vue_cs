@@ -130,13 +130,27 @@
                     // validação de formulários “à mão”, 
                     //passo 3
                     checkForm: function () {
+                        
+                        var data_atual = new Date();
+
+                        var data_form = new Date(this.novo_jogador.data_nascimento);
+
+                        var data_correta = false;
+
+                        if(data_atual > data_form){
+                            data_correta = true;
+                        }else{
+                            data_correta = false;
+                        }
 
                         this.errors = [];
+                        
 
                         if (this.novo_jogador.nickname.trim().length > 3 && 
                            this.novo_jogador.qtd_estrela > 0 &&
                             this.novo_jogador.qtd_estrela < 101 && 
                             this.novo_jogador.senha.length > 3 && 
+                            data_correta == true &&
                             !isNaN(parseInt(this.novo_jogador.patente.codigo))) {
                             return true;
                         }
@@ -151,7 +165,11 @@
 
                         if (this.novo_jogador.senha.trim().length <= 3) {
                             this.errors.push('Informe senha com 4 dígitos.');
-                        }                                                
+                        }              
+                        
+                        if(data_correta == false){
+                            this.errors.push('Informe data.');
+                        }
                         if (isNaN(parseInt(this.novo_jogador.patente.codigo))) {
                             this.errors.push('A Patente é obrigatória.');
                         }
@@ -189,6 +207,8 @@
                             }
                             this.cleanFormulario();
 
+                        }else{
+                            alert("Formulário incompleto, veja a lista de erros !!")
                         }//passo 5.
                     },
 
@@ -200,6 +220,7 @@
                         this.novo_jogador.qtd_estrela = this.jogadores[param_index].qtd_estrela;
                         this.novo_jogador.senha = this.jogadores[param_index].senha;
                         this.novo_jogador.patente = this.jogadores[param_index].patente;
+                        this.novo_jogador.status = this.jogadores[param_index].status;
                     },
 
                     remJogador: function(param_index){

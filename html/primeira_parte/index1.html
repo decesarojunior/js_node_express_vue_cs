@@ -38,17 +38,20 @@
                         </li>
                     </ul>
 
-                    <h2>Listagem de Partidas</h2>
-                       
+                    <h2>Listagem de Partidas</h2>                       
 
                         <table border="1">
                             <tr><td>Codigo</td>
                                 <td>Data</td>
+                                <td>Jogador</td>
+                                <td>Quantidade de Estrelas</td>
                             </tr>
                             <tr v-for="p in partidas" :key="p.codigo">
 
                                <td> {{p.codigo}} </td>
-                               <td></td>
+                               <td> {{p.data}}</td>
+                               <td> {{p.jogador.nickname}}</td>
+                               <td> {{p.jogador.qtd_estrela}}</td>
                             </tr>
 
                         </table>
@@ -61,7 +64,7 @@
    
         $(document).ready(function() {
 
-            //alert('Chegou aqui !! ');
+            alert('Chegou aqui !! ');
         
             var dados = { 
                 jogadores:  [ {nickname: 'joaozinho', qtd_estrela: 5, senha: '123'},    
