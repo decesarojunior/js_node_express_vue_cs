@@ -20,69 +20,11 @@
                  <li class="active"><a data-toggle="pill" href="#home">Autenticação</a></li>
                  <li><a data-toggle="pill" href="#menu1">Endereço</a></li>
                  <li><a data-toggle="pill" href="#menu2">Jogador</a></li>
-                 <li><a data-toggle="pill" href="#menu_reavaliacao_primeira_etapa">Arma</a></li>
-                 <li><a data-toggle="pill" href="#menu_reavaliacao_primeira_etapa_p2">Municão</a></li>
                  <li><a data-toggle="pill" href="#menu4">Sair</a></li>
                </ul>
              </div>
              <div class="col-xs-6">
                <div class="tab-content" id="app">
-
-
-                <div id="menu_reavaliacao_primeira_etapa_p2" class="tab-pane fade" v-if="form_autenticacao.datacadastro">
-                    <h2>Listagem de Armas</h2>   
-
-                    <table id="tblListagemMunicoes" class="table table-striped" >
-                        <tr>
-                            <th scope="col">Código</th>
-                            <th scope="col">Nome</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col">Data de Criação</th>
-                            <th scope="col">Calibre</th>
-                            <th scope="col">Remover</th>
-                        </tr>                     
-                        <tbody>
-                            <tr v-for="(a, indice) in municoes">                                                
-                                    <td>{{a.codigo}}</td>
-                                    <td>{{a.nome}}</td>
-                                    <td>{{a.valor}}</td>
-                                    <td>{{a.datacriacao}}</td>
-                                    <td>{{a.calibre}}</td>                                 
-                                    <td><button v-on:click="remMunicao(indice, a.codigo)" class="btn" type="button">Remover</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                 </div>
-
-
-                <div id="menu_reavaliacao_primeira_etapa" class="tab-pane fade" v-if="form_autenticacao.datacadastro">
-                    <h2>Listagem de Armas</h2>   
-
-                    <table id="tblListagemArmas" class="table table-striped" >
-                        <tr>
-                            <th scope="col">Código</th>
-                            <th scope="col">Nome</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col">Data de Criação</th>
-                            <th scope="col">Nível do Dano</th>
-                            <th scope="col">Velocidade da Recarga</th>
-                            <th scope="col">Quantidade Max. Compra</th>
-                            <th scope="col">Remover</th>
-                        </tr>                     
-                        <tbody>
-                            <tr v-for="(a, indice) in armas">                                                
-                                    <td>{{a.codigo}}</td>
-                                    <td>{{a.nome}}</td>
-                                    <td>{{a.valor}}</td>
-                                    <td>{{a.datacriacao}}</td>
-                                    <td>{{a.niveldano}}</td>
-                                    <td>{{a.velocidade_recarga}}</td>
-                                    <td>{{a.quant_max_compra}}</td>                                    
-                                    <td><button v-on:click="remArma(indice, a.codigo)" class="btn" type="button">Remover</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                 </div>
                 <div id="home" class="tab-pane fade in active" v-if="!form_autenticacao.datacadastro">
                    <h3>Autenticacação</h3>
                         <div class="form-outline mb-4">
