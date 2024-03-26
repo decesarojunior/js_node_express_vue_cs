@@ -1,0 +1,249 @@
+<html>
+<!--
+    /*  Exercício 4.1: 
+                refatorar a variavel dados: criar variáveis especificas para 
+                        enderecos, patentes, jogadores e novo_jogador. 
+                        Vincular essas novas variáveis
+                        com a variável dados.
+        Exercício 4.2:
+                Definir um novo campo para a escolha do perfil do Jogador. Opções:
+                          1 - Terrorista
+                          2 - Contraterrorista
+                                {id : 1, nome : 'Terrorista'}
+                                {id : 2, nome : 'Contraterrorista'}                                 
+    */
+-->
+
+<head>
+    <meta charset="utf-8">
+    <title>Exercicio 4 - select</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+</head> 
+<body>         
+    <div id="app" class="container">               
+            <h2>Listagem de Jogadores do CS</h2>   
+
+            <table class="table table-striped" >
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">NickName</th>
+                    <th scope="col">Data Nascimento</th>
+                    <th scope="col">Quantidade de Estrelas</th>
+                    <th scope="col">Patente</th>
+                    <th scope="col">Endereço</th>
+                    <th scope="col">Perfil</th>
+                    <th scope="col">Status</th>                            
+                    <th scope="col">Alterar</th>
+                    <th scope="col">Remover</th>
+                </tr>                     
+                <tbody>
+                    <tr v-for="(j, indice) in jogadores">                                                
+                            <td>{{indice}}</td>
+                            <td>{{j.nickname}}</td>
+                            <td>{{j.data_nascimento}}</td>
+                            <td>{{j.qtd_estrela}}</td>
+                            <td>{{j.patente.descricao}}</td>
+                            <td>{{j.endereco.cep}}</td>
+                            <td>{{j.perfil.nome}}</td>
+                            <td v-if="j.status"><input type="checkbox" checked disabled></td>
+                            <td v-if="!j.status"><input type="checkbox" disabled></td>
+                            <td><button v-on:click="editJogador(indice)" class="btn" type="button">Alterar</button></td>
+                            <td><button v-on:click="remJogador(indice)" class="btn" type="button">Remover</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <form id="formulario">                        
+                <h3>Formulário para cadastrar novo jogador</h3>
+                    <div class="form-group">
+                        <label for="inputIndice">#:</label>
+                        <input type="text" v-model="novo_jogador.indice" class="form-control" id="inputIndice" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputNickname">Nickname:</label>
+                        <input type="text" v-model="novo_jogador.nickname" class="form-control" id="inputNickname">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDtNasc">D. Nascimento:</label>
+                        <input type="date" v-model="novo_jogador.data_nascimento" class="form-control" id="inputDtNasc"><!--Atividade 2 - Aplicar um input/calendario mais apropriado. -->
+                    </div>
+                    <div class="form-group">
+                        <label for="inputQtdEstrela">Quantidade de Estrelas:</label>
+                        <input type="number" v-model="novo_jogador.qtd_estrela" class="form-control" id="inputQtdEstrela">
+                    </div>
+                    <!-- https://br.vuejs.org/v2/guide/forms.html -->
+                    <div class="form-group">
+                        <label for="selectPatente">Patente:</label>
+                        <select v-model="novo_jogador.patente" class="form-control" id="selectPatente">
+                            <option disabled selected value="">Escolha um item</option>
+                            <option v-for="p in patentes" v-bind:value="p">
+                                {{ p.descricao }}
+                              </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectEndereco">Endereço:</label>
+                        <select v-model="novo_jogador.endereco" class="form-control" id="selectEndereco" >
+                            <option disabled selected value="">Escolha um item</option>
+                            <option v-for="e in enderecos" v-bind:value="e">
+                                {{ e.cep }}
+                              </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectPerfil">Perfil:</label>
+                        <select v-model="novo_jogador.perfil" class="form-control" id="selectPerfil">
+                            <option disabled selected value="">Escolha um item</option>
+                            <option v-for="p in perfis" v-bind:value="p">
+                                {{ p.nome }}
+                              </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkStatus">Status:</label>
+                        <input type="checkbox" v-model="novo_jogador.status" class="form-control" id="checkStatus"><!--Atividade 1 - Aplicar um input mais apropriado. -->
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSenha">Senha:</label>
+                        <input type="password" v-model="novo_jogador.senha" class="form-control" id="inputSenha"><!--Atividade 3 - Aplicar um input mais apropriado. -->
+                    </div>
+                    
+                    <button @click="addJogador" class="btn btn-primary" type="button">Salvar</button>
+                    <button @click="cleanFormulario" class="btn btn-primary" type="button">Limpar</button>
+                    
+                    </div>                                                                            
+            </form>        
+
+    </div>       
+</body>
+<script type="text/javascript">
+    $(document).ready(function() {
+                                        
+        var vet_perfis = [{id : 1, nome : 'Terrorista'},{id : 2, nome : 'Contraterrorista'}]
+
+        var vet_enderecos = [{id : 0, cep : '99010000'},{id : 1, cep : '99052250'}];
+
+        var vet_patentes = [{codigo: 1, descricao: 'Bronze'},{codigo: 2, descricao: 'Prata'},
+                            {codigo: 3, descricao: 'Ouro'}];
+
+        var vet_jogadores = [ {nickname: 'joaozinho', data_nascimento: '', qtd_estrela: 5, 
+                status: true, senha: '123', patente: vet_patentes[0], endereco: vet_enderecos[0],
+                perfil : vet_perfis[1]}];
+        
+        var obj_novo_jogador = {indice: '', nickname: '', data_nascimento: '', qtd_estrela: 0, 
+                                                   status: false, senha: '', 
+                                                   patente: {}, endereco: {}, perfil : {}};
+        var dados = { 
+            enderecos: vet_enderecos,
+            patentes: vet_patentes,
+            jogadores:  vet_jogadores,             
+            novo_jogador: obj_novo_jogador,
+            perfis : vet_perfis
+        };
+    
+      new Vue({ 
+            el: '#app', 
+            data: dados,
+            methods: { 
+
+                addJogador: function () {
+                    var input_indice = this.novo_jogador.indice;  
+                    var input_nickname = this.novo_jogador.nickname.trim(); 
+                    var input_data_nascimento = this.novo_jogador.data_nascimento.trim(); 
+                    var input_qtd_estrela = this.novo_jogador.qtd_estrela;                         
+                    var input_senha = this.novo_jogador.senha.trim();
+                    var input_status = this.novo_jogador.status;
+                    var select_patente = this.novo_jogador.patente;
+                    var select_endereco = this.novo_jogador.endereco;
+                    var select_perfil = this.novo_jogador.perfil;
+
+                    if (input_nickname && input_qtd_estrela > -1 && input_senha && select_perfil.id > 0) {
+                        
+                        //documentação sobre o parseInt
+                        //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/parseInt
+                        if(isNaN(parseInt(input_indice))){
+
+                            this.jogadores.push({nickname: input_nickname, 
+                                             data_nascimento: input_data_nascimento, 
+                                             qtd_estrela: input_qtd_estrela, 
+                                             status: input_status, 
+                                             senha:input_senha,
+                                             patente:select_patente,
+                                             endereco: select_endereco,
+                                             perfil : select_perfil}
+                                            );
+                            alert('Novo Jogador cadastrado !');
+
+                        }else{
+
+                            this.jogadores[input_indice] = {nickname: input_nickname, 
+                                             data_nascimento: input_data_nascimento, 
+                                             qtd_estrela: input_qtd_estrela, 
+                                             status: input_status, 
+                                             senha:input_senha,
+                                             patente:select_patente,
+                                             endereco: select_endereco,
+                                             perfil : select_perfil
+                                            };
+
+                            alert('Jogador alterado !');
+                        }
+                        this.cleanFormulario();
+
+                    }else{
+
+                        alert("Preencha nickname, estrelas e senha !!!");
+                    }
+                },
+
+                editJogador: function (param_index) {
+
+                    this.novo_jogador.indice = param_index;
+                    this.novo_jogador.nickname = this.jogadores[param_index].nickname; 
+                    this.novo_jogador.data_nascimento = this.jogadores[param_index].data_nascimento;
+                    this.novo_jogador.qtd_estrela = this.jogadores[param_index].qtd_estrela;
+                    this.novo_jogador.senha = this.jogadores[param_index].senha;
+                    this.novo_jogador.patente = this.jogadores[param_index].patente;
+                    this.novo_jogador.endereco = this.jogadores[param_index].endereco;
+                    this.novo_jogador.status = this.jogadores[param_index].status;
+                    this.novo_jogador.perfil = this.jogadores[param_index].perfil;
+                },
+
+                remJogador: function(param_index){
+                    
+                    //documentacao sobre o splice
+                    //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+                    //remove 1 elemento do índice definido pela variavel param_index
+                    this.jogadores.splice(param_index, 1);
+
+                    alert('Removeu o jogador: ' + param_index);
+                },
+                
+                cleanFormulario: function() {
+
+                    this.novo_jogador.indice = '';
+                    this.novo_jogador.nickname = ''; 
+                    this.novo_jogador.data_nascimento = '';
+                    this.novo_jogador.qtd_estrela = 0;
+                    this.novo_jogador.senha = '';
+                    this.novo_jogador.status = false;
+                    this.novo_jogador.patente = '';
+                    this.novo_jogador.endereco = '';
+                    this.novo_jogador.perfil = '';  
+                }
+
+            },
+            created:  function(){
+
+                this.cleanFormulario();
+                
+            }
+        }); 
+    });
+
+</script> 
+</html>

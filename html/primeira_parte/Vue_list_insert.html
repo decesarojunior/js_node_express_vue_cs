@@ -36,21 +36,25 @@
             </div>       
     </body>
     <script type="text/javascript">
-
         //1) explicar porque os dados inseridos são perdidos após 
         // o recarregamento da página.
     
         //2) alteracoes: customizar os inputs para número e senha.
-        //Utilizando o atributo type.
-
+        //Utilizando o atributo type. ok
 
         //3) alterar a implementação da validação do formulário para
         //impedir nickname menores e igual a 3 dígitos e maiores que 8.
-        //R: 
+        //R: ok
         
         //4) alterar a implementação da validação do formulário para
-        //permitir apenas senhas com 4 dígitos.
+        //permitir apenas senhas com 4 dígitos. ok
 
+        //5) Aprimorar a validação do formulário com mensagens específicas
+        //para cada campo.
+
+        //6) Gerar um alerta informando que os dados foram validados com sucesso.
+
+        //7) Refatoração da listagem: utilizar uma tabela para listar os dados de forma dinâmica.
 
         $(document).ready(function() {
             var dados = { 
@@ -78,19 +82,27 @@
 		                var input_qtd_estrela = this.novo_jogador.qtd_estrela; 
                         var input_senha = this.novo_jogador.senha.trim();
                         //validacao do formulario
-                        if (input_jogador.length > 3 && input_jogador.length < 9 &&
-                           input_qtd_estrela > 0 && 
-                           input_senha.length == 4) {
-                        
-                            this.jogadores.push({
+                        if (input_jogador.length > 3 && input_jogador.length < 9){
+                            
+                            if( input_qtd_estrela > 0){
+
+                                if(input_senha.length == 4){
+
+                                    this.jogadores.push({
                                                  qtd_estrela: input_qtd_estrela, 
                                                  senha:input_senha,
                                                  nickname: input_jogador})
 
+                                }else{
+                                    alert("Informe a senha de 4 digitos.");
+                                }
+                            }else{
+                                alert("Informe o quantida de estrelas maior do que zero");
+                            }
                         }else{
-
-                            alert("Preencha todo os campos !!!");
+                            alert("Informe o nickname correto");
                         }
+
                     }
 
                 }

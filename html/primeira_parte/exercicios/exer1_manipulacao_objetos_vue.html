@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>FrameWork Vue</title>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>    
+    </head> 
+    <body>
+         <h2>Primeiro Exemplo com Vue</h2>
+         
+            <div id="app">
+                <form id="formulario1">
+                     <!-- exercicio 2 -->
+                    <!-- Mostrar apenas os três ultimos elementos do vetor jogadores-->
+                    <h2>Listagem dos últimos três Jogadores</h2>
+                    <ul>
+                        <li><label> {{jogadores[jogadores.length-1].nickname}} - 
+                                    {{jogadores[jogadores.length-1].qtd_estrela}} - 
+                                    {{jogadores[jogadores.length-1].senha}} -
+                                    {{jogadores[jogadores.length-1].patentes[0].descricao}}
+                            </label>
+                        </li>
+
+                        <li><label>{{jogadores[jogadores.length-2].nickname}} - 
+                                   {{jogadores[jogadores.length-2].qtd_estrela}} - 
+                                   {{jogadores[jogadores.length-2].senha}} -
+                             </label>
+                        </li>
+
+                        <li><label>{{jogadores[jogadores.length-3].nickname}} - 
+                                {{jogadores[jogadores.length-3].qtd_estrela}} - 
+                                {{jogadores[jogadores.length-3].senha}} -
+                            </label>
+                        </li>
+
+                    </ul>  
+                    <!-- exercicio 2 -->
+                     <!-- Mostrar todos jogadores (todos os atributos)-->
+                    <ul id="example-1">
+                        <li v-for="j in jogadores" :key="j.nickname">
+                          {{ j.nickname }} - {{ j.senha }} - {{ j.qtd_estrela }}
+                            <p v-for="p in j.patentes">
+                                    {{p.descricao}}
+                            </p>
+                        </li>
+                    </ul>
+                      <!-- exercicio 2 -->
+                     <!-- Mostrar em vermelho os jogadores com menos de 10 estrelas-->
+                     <!-- Mostrar em azul os jogadores com 10 estrelas-->
+                    <ul id="example-2">
+                        <li v-for="j in jogadores" :key="j.nickname">
+
+                            <p v-if="j.qtd_estrela >= 10" style="background-color: blue;">
+                                {{ j.nickname }} {{ j.senha }} {{ j.qtd_estrela }}
+                            </p>
+                            <p v-else style="background-color: red;">
+                                {{ j.nickname }} {{ j.senha }} {{ j.qtd_estrela }}
+                            </p>
+
+                        </li>
+                    </ul>
+
+                     <!-- Mostrar todas as partidas -->
+
+                    <h2>Listagem de Partidas</h2>                       
+
+                        <table border="1">
+                            <tr><td>Codigo</td>
+                                <td>Data</td>
+                                <td>Jogador</td>
+                                <td>Quantidade de Estrelas</td>
+                            </tr>
+                            <tr v-for="p in partidas" :key="p.codigo">
+
+                               <td> {{p.codigo}} </td>
+                               <td> {{p.data}}</td>
+                               <td> {{p.jogador.nickname}}</td>
+                               <td> {{p.jogador.qtd_estrela}}</td>
+                            </tr>
+
+                        </table>
+
+                </form>                
+            </div>       
+    </body>
+
+    <script type="text/javascript">
+   
+        $(document).ready(function() {
+
+            alert('Chegou aqui !! ');
+            // exercicio 1 
+            // 10 jogadores,
+            // 5 patentes,
+            // 5 partidas,
+            //exercicio 3
+            // vincular patentes com jogadores (jogador deverá ter um vetor de patentes)
+            // vincular partidas com jogadores (partida deverá ter um jogador)
+            /*
+             comentario de bloco
+            */
+            var vet_patentes = [ { codigo: '1', descricao: 'Ouro'},    
+                                 { codigo: '2', descricao: 'Prata'},
+                                 { codigo: '3', descricao: 'Bronze'}
+                               ];
+            var vet_jogadores = [ {nickname: 'joaozinho', qtd_estrela: 5, senha: '123', 
+                                      patentes: [vet_patentes[0], vet_patentes[1]]},    
+                                  {nickname: 'ze', qtd_estrela: 12, senha: '456', patentes: [vet_patentes[2]]},
+                                  {nickname: 'bastião', qtd_estrela: 16, senha: '777', patentes: [vet_patentes[2]]},
+                                  {nickname: 'dede', qtd_estrela: 16, senha: '777', patentes: [vet_patentes[2]]}
+                               ]; 
+            var vet_partidas =  [{codigo: 1, data: '28/02/2023', 
+                                           jogador: vet_jogadores[0]},
+                                {codigo: 2, data: '10/02/2023', 
+                                           jogador: vet_jogadores[1]}                    
+                            ]                                      
+            var dados = { 
+                jogadores:  vet_jogadores, 
+                patentes:   vet_patentes,
+                partidas:   vet_partidas                         
+            };
+        
+            new Vue({ 
+                el: '#app', 
+                data: dados,
+                methods: { 
+
+                }
+            }); 
+    
+        });
+
+    </script> 
+   
+ </html>
