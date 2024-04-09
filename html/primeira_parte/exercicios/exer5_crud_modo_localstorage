@@ -1,0 +1,16 @@
+<html>
+    <!--
+        Com base no exemplo Vue_crud_localstorage.html
+
+        1) Implementar validação do manual para Jogador e Endereco
+
+        2) Resolver as warnings. 
+
+        3) Incluir o campo número no Endereço.
+
+        4) Implementar o CRUD para Modo (id, nome e status).
+
+        5) Implementar o VueLidate no CRUD de Modo.
+    -->
+
+</html>
