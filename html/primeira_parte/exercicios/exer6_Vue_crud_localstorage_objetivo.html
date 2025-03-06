@@ -2,12 +2,23 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Vue - CRUD - Endereço - Jogador - LocalStorage</title>
+        <title>Vue - CRUD - Endereço - Jogador - LocalStorage - Revisão.</title>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>      
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
         <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <!--
+            Exercicio de revisão.
+            Utilizar como base o arquivo Vue_crud_localstorage_objetivo.html
 
+            Adicionar o menu e uma div para Objetivos
+            Implementar uma tabela em HTML para as seguintes colunas: Id, Nome, Qtd. Pontos, Status, Alterar e Remover. Alterar a variável dados, localstorage e métodos para alterar e remover registros.
+            Implementar os campos em HTML
+            Implementar a funcionalidade de incluir novo registro.
+            Implementar a funcionalidade de alterar registro.
+            Implementar a validação manual (nome: 1 a 20 caracteres, pontos: de 1 a 10.000)
+            Implementar a remoção de registro (com confirmação)
+        -->
     </head> 
     <body> 
        
@@ -20,11 +31,37 @@
                  <li><a data-toggle="pill" href="#menu1">Endereço</a></li>
                  <li><a data-toggle="pill" href="#menu2">Jogador</a></li>
                  <li><a data-toggle="pill" href="#menu3">Modo</a></li>
-                 
+                 <li><a data-toggle="pill" href="#menu4">Objetivo</a></li>
                </ul>
              </div>
              <div class="col-xs-9">
                <div class="tab-content" id="app">
+
+                <div id="menu4" class="tab-pane fade">
+                    <h2>Listagem de Objetivos</h2>   
+
+                    <table class="table table-striped" >
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Qtd. Pontos</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Alterar</th>
+                            <th scope="col">Remover</th>
+                        </tr>                     
+                        <tbody>
+                            <tr v-for="(o, indice) in objetivos">                                                
+                                    <td>{{o.id}}</td>
+                                    <td>{{o.nome}}</td>
+                                    <td>{{o.qtd_pontos}}</td>
+                                    <td>{{o.status}}</td>
+                                    <td><button v-on:click="editObjetivo(indice)" class="btn" type="button">Alterar</button></td>
+                                    <td><button v-on:click="remObjetivo(indice)" class="btn" type="button">Remover</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
 
                 <div id="menu3" class="tab-pane fade">
                     <h3>Modo</h3>
@@ -56,7 +93,7 @@
                         </tbody>
                     </table>
   
-                    <form id="formulario">     
+                    <form id="formularioEndereco">     
                         <h3>Formulário para cadastrar Endereço</h3>                   
                         <div>
                           <div class="form-group">
@@ -105,7 +142,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <form id="formulario">                        
+                    <form id="formularioJogador">                        
                       <h3>Formulário para cadastrar Jogador</h3>
                          
                           <div class="form-group">
@@ -157,6 +194,19 @@
 
     $(document).ready(function() {
 
+      //implementacao da questao 2.  
+      var objetivos = [];
+      //testa se existe o item jogadores no localStorage do navegador.
+      if(localStorage.getItem("objetivos") == null){
+
+        //caso não exista cria o item jogadores.
+        localStorage.setItem("objetivos" , JSON.stringify([]));
+                        
+      }else{
+        //se existir, realiza o parse e armazena na variável jogadores.
+        jogadores = JSON.parse(localStorage.getItem("objetivos"))
+      }
+
       var jogadores = [];
       //testa se existe o item jogadores no localStorage do navegador.
       if(localStorage.getItem("jogadores") == null){
@@ -184,7 +234,10 @@
       var dados = {"jogadores": jogadores, 
                   "novo_jogador" : {indice: '', nickname: '', data_nascimento: '', qtd_estrela: '', status: true, senha: '', endereco: {}}, 
                   "enderecos": enderecos,
-                  "novo_endereco" : {indice: '', id: '', cep: '', complemento: ''}};
+                  "novo_endereco" : {indice: '', id: '', cep: '', complemento: ''},
+                  "objetivos" : objetivos,
+                  "novo_objetivo" : {indice: '', id: '', nome: '', qtd_pontos: '', status: false }
+                };
 
       Vue.filter('formataData', function (value) {                
                 //yyyy-mm-dd
@@ -246,7 +299,14 @@
                             alert("Preencha CEP !!!");
                         }
                     },
+                    //implementacao da questao 2
+                    editObjetivo: function(param_index){
 
+                    },
+                    //implementacao da questao 2
+                    remObjetivo: function(param_index){
+
+                    },
                     editEndereco: function (param_index) {
                         this.novo_endereco.indice = param_index;
                         this.novo_endereco.id = this.enderecos[param_index].id;
